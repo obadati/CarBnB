@@ -1,0 +1,560 @@
+:toc:
+
+= API documentation
+
+NOTE: A valid access token is required for all APIs except login and registration.
+For testing, you can simply pass `test_token` as Bearer token in the authorization header.
+This will be accepted by the application for now.
+
+== User API
+
+=== Registration
+
+Path: /user/registration
+
+HTTP method: POST
+
+Parameters:
+
+* firstName: string
+* lastName: string
+* birthdate: string (dd.mm.yyyy)
+* email: string
+* phoneNumber: string
+* password: string
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|The registration was successful
+|200
+|JSON
+|`{status: 'Success', message: 'User added succesfully', access_token: '...'}`
+|E-mail address is already used by another user
+|409
+|JSON
+|`{status: 'Failed', message: 'Email address is already in use'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Login
+
+Path: /user/login
+
+HTTP method: POST
+
+Parameters:
+
+* email: string
+* password: string
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|The login was successful
+|200
+|JSON
+|`{user: { ... }, access_token: '...'}`
+|Password or email address is not given
+|400
+|JSON
+|`{message: 'Email and password cannot be null.'}`
+|There is no user with the given email address
+|401
+|JSON
+|`{status: 'Failed', message: 'Invalid credentials.'}`
+|The password does not match with the password found for the user
+|401
+|JSON
+|`{status: 'Failed', message: 'Invalid credentials.'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+== Car API
+
+=== Search cars
+
+=== Add new car
+
+Path: /car
+
+HTTP method: POST
+
+Parameters:
+
+* userID: number
+* brandID: number
+* typeID: number
+* fuelID: number
+* color: string
+* description: string
+* model: string
+* plateNumber: string
+* hourlyCost: number
+* dailyCost: number
+* seats: number
+* doors: number
+* lat: string
+* long: string
+* city: string
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|Car created succesfully
+|200
+|JSON
+|`{..., affectedRows: 1, ...}`
+|No car created (unknown reason)
+|500
+|JSON
+|`{ status: 'Failed', message: 'No car created' }`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+== Order API
+
+== Brand API
+
+== Car Type API
+
+=== Get all car types
+
+Path: /cartype
+
+HTTP method: GET
+
+Parameters:
+
+* none
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|List all car types
+|200
+|JSON
+|`[{carTypeID: 1, Type: '...'}, {...}]`
+|No car types found in the database
+|404
+|JSON
+|`{ status: 'Failed', message: 'No car types found' }`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Get car type by ID
+
+Path: /cartype/:id
+
+HTTP method: GET
+
+Parameters:
+
+* The ID of the car type
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|Return the car type with the given ID
+|200
+|JSON
+|`{carTypeID: 1, Type: '...'}`
+|No car type with the given ID found
+|404
+|JSON
+|`{ status: 'Failed', message: 'No car type found with ID x'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Create a new car type
+
+Path: /cartype
+
+HTTP method: POST
+
+Parameters:
+
+* type: string
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|New car type created succesfully
+|200
+|JSON
+|`{status: 'Success', message: 'Car type added succesfully'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Delete car type
+
+Path: /cartype/:id
+
+HTTP method: DELETE
+
+Parameters:
+
+* The ID of the car type
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|Car type deleted succesfully
+|200
+|JSON
+|`{..., affectedRows: 1, ...}`
+|No car type with the given ID found
+|404
+|JSON
+|`{ status: 'Failed', message: 'No car type found with ID x'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Change car type
+
+Path: /cartype
+
+HTTP method: PUT
+
+Parameters:
+
+* carTypeID: number
+* type: string
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|Car type changed succesfully
+|200
+|JSON
+|`{..., affectedRows: 1, ...}`
+|Incorrect parameters. carTypeID or type are not set.
+|400
+|JSON
+|`{message: "carTypeID and type cannot be null."}`
+|The car type with the given ID does not exist
+|404
+|JSON
+|`{ status: 'Failed', message: 'Car type not found with ID x'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+== Fuel Type API
+
+=== Get all fuel types
+
+Path: /fueltype
+
+HTTP method: GET
+
+Parameters:
+
+* none
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|List all fuel types
+|200
+|JSON
+|`[{fuelID: 1, Type: '...'}, {...}]`
+|No fuel types found in the database
+|404
+|JSON
+|`{ status: 'Failed', message: 'No fuel type found' }`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Get fuel type by ID
+
+Path: /fueltype/:id
+
+HTTP method: GET
+
+Parameters:
+
+* The ID of the fuel type
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|Return the fuel type with the given ID
+|200
+|JSON
+|`{fuelID: 1, Type: '...'}`
+|No fuel type with the given ID found
+|404
+|JSON
+|`{ status: 'Failed', message: 'No fuel type found with ID x'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Create a new fuel type
+
+Path: /fueltype
+
+HTTP method: POST
+
+Parameters:
+
+* type: string
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|New fuel type created succesfully
+|200
+|JSON
+|`{status: 'Success', message: 'Fuel type added succesfully'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Delete fuel type
+
+Path: /fueltype/:id
+
+HTTP method: DELETE
+
+Parameters:
+
+* The ID of the fuel type
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|Fuel type deleted succesfully
+|200
+|JSON
+|`{..., affectedRows: 1, ...}`
+|No fuel type with the given ID found
+|404
+|JSON
+|`{ status: 'Failed', message: 'No fuel type found with ID x'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Change fuel type
+
+Path: /fueltype
+
+HTTP method: PUT
+
+Parameters:
+
+* fuelID: number
+* type: string
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|Fuel type changed succesfully
+|200
+|JSON
+|`{..., affectedRows: 1, ...}`
+|Incorrect parameters. fuelID or type are not set.
+|400
+|JSON
+|`{message: "fuelID and type cannot be null."}`
+|The fuel type with the given ID does not exist
+|404
+|JSON
+|`{ status: 'Failed', message: 'Fuel type not found with ID x'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+== FAQ API
+
+=== Get all FAQs
+
+Path: /faq
+
+HTTP method: GET
+
+Parameters:
+
+* none
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|List all FAQs
+|200
+|JSON
+|`[ {faqID: 1, question: '...', answer: '...'}, {...}]`
+|No FAQ found in the database
+|404
+|JSON
+|`{ status: 'Failed', message: 'No FAQs found' }`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Get FAQ by ID
+
+Path: /faq/:id
+
+HTTP method: GET
+
+Parameters:
+
+* The ID of the FAQ
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|Return the FAQ with the given ID
+|200
+|JSON
+|`{faqID: 1, question: '...', answer: '...'}`
+|No FAQ with the given ID found
+|404
+|JSON
+|`{ status: 'Failed', message: 'No FAQ found with ID x'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Create new FAQ
+
+Path: /faq
+
+HTTP method: POST
+
+Parameters:
+
+* question: string
+* answer: string
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|New FAQ created succesfully
+|200
+|JSON
+|`{status: 'Success', message: 'FAQ added succesfully'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Delete FAQ
+
+Path: /faq/:id
+
+HTTP method: DELETE
+
+Parameters:
+
+* The ID of the FAQ
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|FAQ deleted succesfully
+|200
+|JSON
+|`{..., affectedRows: 1, ...}`
+|No FAQ with the given ID found
+|404
+|JSON
+|`{ status: 'Failed', message: 'No FAQ found with ID x'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
+
+=== Change FAQ
+
+Path: /faq
+
+HTTP method: PUT
+
+Parameters:
+
+* faqID: number
+* question: string
+* answer: string
+
+Responses:
+
+|===
+|description |status code |content-type |content
+|FAQ changed succesfully
+|200
+|JSON
+|`{..., affectedRows: 1, ...}`
+|Incorrect parameters. faqID, question or answer are not set.
+|400
+|JSON
+|`{message: 'faqID, question and answer cannot be null.'}`
+|The FAQ with the given ID does not exist
+|404
+|JSON
+|`{ status: 'Failed', message: 'No FAQ found with ID x'}`
+|Backend error
+|500
+|JSON
+|`{status: 'Failed', message: err.message}`
+|===
